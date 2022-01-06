@@ -1,21 +1,19 @@
 require('dotenv').config();
-const db = require('./db/connection');
+const db = require('./db')
 const inquirer = require('inquirer');
 const { printTable } = require('console-table-printer');
 const { init } = require('express/lib/application');
 
 
-// Start app after DB connection
-db.connect(err => {
-    if (err) throw err;
-    console.log('Database connected :)');
-      // function to start inquirer questions, aka the app
-      viewAllChoices();
-    });
+function start() {
+  viewAllChoices();
+}
+start()
+
 
 // inquirer start questions: view all departments, view all roles, view all employees, add a department, add a role, add an employee, and update an employee role
 
-viewAllChoices = () =>  {
+function viewAllChoices () {
   inquirer
     .prompt({
       type: 'list',
@@ -28,43 +26,68 @@ viewAllChoices = () =>  {
         'Add a department',
         'Add a role',
         'Add an employee',
-        'Update an employee role'
+        'Update an employee role',
+        'Exit menu'
       ]
     })
     .then(res => {
-      if (res.viewChoices === 'View all departments') {
-        viewAllDepartments();
+      switch (res.viewChoices) {
+        // works like an if-else statement but more concise
+        case 'View all departments':
+          viewAllDepartments();
+          break;
+
+        case 'View all roles':
+          viewAllRoles();
+          break;
+
+        case 'View all employees':
+          viewAllEmployees();
+          break;
+
       }
     });
 }
 
 // choice to exit program or go back to the main menu after viewing a table of data
-goBack = () => {
+const goBack = () => {
   inquirer.prompt({
     type: 'list',
     name: 'goBackOrNot',
     message: 'Would you like to return to the main menu?',
     choices: ['Yes', 'No']
   })
-  .then(res => {
-    if (res.goBackOrNot === 'Yes') {
-      viewAllChoices();
-    } else {
-    return console.log('See you next time!')};
-  });
+    .then(res => {
+      if (res.goBackOrNot === 'Yes') {
+        viewAllChoices();
+      } else {
+        console.log('See you next time!')
+        process.exit();
+      };
+     
+    });
 };
 
 // view the department table
-viewAllDepartments = () => {
-  const sql = `SELECT * FROM department`
-    db.query(sql, (err, departmentTable) => {
-        if (err) {
-            throw err;
-        }
-        printTable(departmentTable);
-        goBack();
-    });
+const viewAllDepartments = () => {
+  db.getAllDepartments().then(([row]) => {
+    printTable(row)
+  }).then(() => goBack())
 };
+
+const viewAllRoles = () => {
+  db.getAllRoles().then(([row]) => {
+    printTable(row)
+  }).then(() => goBack())
+};
+
+const viewAllEmployees = () => {
+  db.getAllEmployees().then(([row]) => {
+    printTable(row)
+  }).then(() => goBack())
+};
+
+
 
 
 

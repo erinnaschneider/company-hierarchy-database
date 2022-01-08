@@ -8,6 +8,20 @@ class DB {
     getAllDepartments(){
         return this.connection.promise().query('SELECT department.id, department.name FROM department;')
     }
+    
+    getDepartmentOptions(){
+        this.getAllDepartments()
+            .then(([rows]) => {
+            let departments = rows;
+            return departments.map(({ id, name }) => (
+            {
+          name: name,
+          value: id
+            }
+           
+        ));
+      })};
+
 
     getAllRoles(){
         // job title, role id, the department that role belongs to, and the salary for that role
@@ -21,6 +35,13 @@ class DB {
 
     addToDepartment(newDepartment) {
         return this.connection.promise().query("INSERT INTO department (name) VALUES (?)", (newDepartment), function (err, result) {
+            if (err) throw err;
+            return result
+        })
+    }
+
+    addToRoles(newRole, roleSalary, newRoleDepartment) {
+        return this.connection.promise().query("INSERT INTO role (title, salary, department_id) VALUES (?, ?, ?)", [newRole, roleSalary, newRoleDepartment], function (err, result) {
             if (err) throw err;
             return result
         })

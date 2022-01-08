@@ -56,8 +56,9 @@ function viewAllChoices () {
         break;
 
         case 'Add a role':
-
         //function
+        addRole();
+        
         break;
 
         case 'Add an employee':
@@ -127,3 +128,31 @@ const addDepartment = () => {
 
 
 
+  const addRole = () => {
+    inquirer  
+      .prompt([
+        {
+        type: 'text',
+        name: 'newRole',
+        message: 'What is the name of the role you would like to add?'
+        },
+        {
+         type: 'number',
+         name: 'roleSalary',
+         message: 'What is the salary of this new role?' 
+        },
+        {
+          type: 'list',
+          name: 'newRoleDepartment',
+          message: 'What department does this new role belong to?',
+          choices: db.getDepartmentOptions()
+        }]
+      ).then((res) => {
+        console.log(res);
+        db.addToRoles(res.newRole, res.roleSalary, res.newRoleDepartment).then(([row]) => {
+          viewAllRoles();
+        }).then(() => goBack())
+      });
+    };
+
+  

@@ -2,13 +2,14 @@ require('dotenv').config();
 const db = require('./db')
 const inquirer = require('inquirer');
 const { printTable } = require('console-table-printer');
-const { init } = require('express/lib/application');
 
 
+
+// start the application
 function start() {
   viewAllChoices();
 }
-start()
+start();
 
 
 // inquirer start questions: view all departments, view all roles, view all employees, add a department, add a role, add an employee, and update an employee role
@@ -45,6 +46,29 @@ function viewAllChoices () {
           viewAllEmployees();
           break;
 
+        case 'Exit menu':
+          process.exit();
+          break;
+
+        case 'Add a department':
+          // function
+          addDepartment();
+        break;
+
+        case 'Add a role':
+
+        //function
+        break;
+
+        case 'Add an employee':
+
+        //function
+        break;
+
+        case 'Update an employee role':
+
+        //function
+        break;
       }
     });
 }
@@ -87,7 +111,19 @@ const viewAllEmployees = () => {
   }).then(() => goBack())
 };
 
-
+const addDepartment = () => {
+  inquirer  
+    .prompt({
+      type: 'text',
+      name: 'newDepartment',
+      message: 'What is the name of the department you would like to add?'
+    }).then((res) => {
+      
+      db.addToDepartment(res.newDepartment).then(([row]) => {
+        viewAllDepartments();
+      }).then(() => goBack())
+    });
+  };
 
 
 

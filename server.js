@@ -3,6 +3,8 @@ const db = require('./db');
 const inquirer = require('inquirer');
 const { printTable } = require('console-table-printer');
 
+
+
 // start the application
 function start() {
   viewAllChoices();
@@ -128,12 +130,10 @@ const addDepartment = () => {
     });
 };
 
+
 const addRole = () => {
   db.getDepartmentOptions().then((departments) => {
-    // const departments = answer[0].map(department => department.name);
-    // const dep_id = answer[0].map(department_id => department_id.id);
-    // console.log('dep_id:', dep_id)
-    console.log('departments:', departments);
+    const arrayDpts = departments.map(department => department.name);
 
     inquirer
       .prompt([
@@ -151,12 +151,11 @@ const addRole = () => {
           type: 'list',
           name: 'newRoleDepartment',
           message: 'What department does this new role belong to?',
-          choices: departments
+          choices: arrayDpts
         }
       ])
       .then((res) => {
-        console.log(res);
-        db.addToRoles(res.newRole, res.roleSalary, res.newRoleDepartment).then(
+        db.addToRoles(res.newRole, res.roleSalary, departments[arrayDpts.indexOf(res.newRoleDepartment)].id).then(
           ([row]) => {
             viewAllRoles();
           }

@@ -15,9 +15,7 @@ class DB {
     return new Promise((resolve, reject) => {
       this.getAllDepartments()
         .then((answer) => {
-          console.log(answer);
-          let dpts = [];
-          resolve((dpts = answer[0].map((department) => department.name)));
+          resolve(answer[0]);
         })
         .catch((error) => console.log(error));
     });
@@ -65,6 +63,10 @@ class DB {
           return result;
         }
       );
+  }
+
+  addToEmployee(first_name, last_name, role_id, manager_id) {
+    
   }
 }
 

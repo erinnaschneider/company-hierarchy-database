@@ -2,6 +2,7 @@ require('dotenv').config();
 const db = require('./db');
 const inquirer = require('inquirer');
 const { printTable } = require('console-table-printer');
+const { addToEmployees } = require('./db');
 
 
 
@@ -63,6 +64,7 @@ function viewAllChoices() {
 
         case 'Add an employee':
           //function
+          addEmployee();
           break;
 
         case 'Update an employee role':
@@ -134,7 +136,6 @@ const addDepartment = () => {
 const addRole = () => {
   db.getDepartmentOptions().then((departments) => {
     const arrayDpts = departments.map(department => department.name);
-
     inquirer
       .prompt([
         {
@@ -163,3 +164,46 @@ const addRole = () => {
       });
   });
 };
+
+
+const addEmployee = () => {
+  db.getRolesOptions().then((roles) => {
+    console.log(roles[0]);
+    const rolesArray = roles.map(role => role.title);
+    console.log('second log', rolesArray);
+  inquirer 
+  .prompt([
+      {
+        type: 'text',
+        name: 'firstName',
+        message: 'What is the first name of the employee you would like to add?'
+      },
+      {
+        type: 'text',
+        name: 'lastName',
+        message: 'What is the last name of the employee you would like to add?'
+      },
+      {
+        type: 'list',
+        name: 'role_title',
+        message: 'What is the role of this new employee?',
+        choices: rolesArray
+      }
+      // {
+      //   type: 'list',
+      //   name: 'manager_id',
+      //   message: 'If applicable, who is the manager of this new employee?',
+      //   choices: rolesArray
+      // }
+    ])
+    .then((res) => {
+      db.addToEmployees(res.first_name, res.last_name, roles[rolesArray.indexOf(res.role_title)].id).then(
+        ([row]) => {
+          viewAllEmployees();
+        }
+      );
+    });
+  }
+)};
+
+    

@@ -38,7 +38,17 @@ class DB {
         })
         .catch((error) => console.log(error));
     });
-  }
+  };
+
+  getManagersOptions() {
+    return new Promise((resolve, reject) => {
+      this.getAllEmployees()
+        .then((answer) => {
+          resolve(answer[0]);
+        })
+        .catch((err) => console.log(err));
+    });
+  };
 
   getAllEmployees() {
     // table showing employee data, including employee ids, first names, last names, job titles, departments, salaries, and managers that the employees report to

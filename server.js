@@ -168,9 +168,7 @@ const addRole = () => {
 
 const addEmployee = () => {
   db.getRolesOptions().then((roles) => {
-    console.log(roles[0]);
     const rolesArray = roles.map(role => role.title);
-    console.log('second log', rolesArray);
   inquirer 
   .prompt([
       {

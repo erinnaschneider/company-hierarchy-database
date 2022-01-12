@@ -169,39 +169,54 @@ const addRole = () => {
 const addEmployee = () => {
   db.getRolesOptions().then((roles) => {
     const rolesArray = roles.map(role => role.title);
-  inquirer 
-  .prompt([
-      {
-        type: 'text',
-        name: 'firstName',
-        message: 'What is the first name of the employee you would like to add?'
-      },
-      {
-        type: 'text',
-        name: 'lastName',
-        message: 'What is the last name of the employee you would like to add?'
-      },
-      {
-        type: 'list',
-        name: 'role_title',
-        message: 'What is the role of this new employee?',
-        choices: rolesArray
-      }
-      // {
-      //   type: 'list',
-      //   name: 'manager_id',
-      //   message: 'If applicable, who is the manager of this new employee?',
-      //   choices: rolesArray
-      // }
-    ])
-    .then((res) => {
-      db.addToEmployees(res.first_name, res.last_name, roles[rolesArray.indexOf(res.role_title)].id).then(
-        ([row]) => {
-          viewAllEmployees();
-        }
-      );
-    });
-  }
-)};
+    let managersArray = [];
 
-    
+
+    db.getManagersOptions().then(managers => {
+
+      managersArray = (managers.map(manager => `${manager.first_name} ${manager.last_name}`))
+      managersArray.push('None of the above')
+
+      inquirer
+        .prompt([
+          {
+            type: 'text',
+            name: 'firstName',
+            message: 'What is the first name of the employee you would like to add?'
+          },
+          {
+            type: 'text',
+            name: 'lastName',
+            message: 'What is the last name of the employee you would like to add?'
+          },
+          {
+            type: 'list',
+            name: 'role_title',
+            message: 'What is the role of this new employee?',
+            choices: rolesArray
+          },
+          {
+            type: 'list',
+            name: 'manager_id',
+            message: 'If applicable, who is the manager of this new employee?',
+            choices: managersArray
+          }
+        ])
+        .then((res) => {
+          let manager_id = ''
+          if (managers[managersArray.indexOf((res.manager_id))] === undefined) {
+            manager_id = null;
+          } else {
+            manager_id = managers[managersArray.indexOf((res.manager_id))].id
+          }
+          db.addToEmployees(res.firstName, res.lastName, roles[rolesArray.indexOf(res.role_title)].id, manager_id).then(() => {
+            viewAllEmployees();
+            }
+          );
+        });
+    })
+  }
+  )
+};
+
+

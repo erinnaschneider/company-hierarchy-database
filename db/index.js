@@ -21,6 +21,16 @@ class DB {
     });
   }
 
+  getEmployeeOptions() {
+    return new Promise((resolve, reject) => {
+      this.getAllEmployees()
+        .then((answer) => {
+          resolve(answer[0]);
+        })
+        .catch((error) => console.log(error));
+    });
+  }
+
   getAllRoles() {
     // job title, role id, the department that role belongs to, and the salary for that role
     return this.connection
@@ -97,6 +107,18 @@ class DB {
           }
         )
   }
-}
+
+  updateTheEmployee(role_id, manager_id) {
+    return this.connection
+        .promise()
+        .query('INSERT INTO employee (role_id, manager_id) VALUES (?, ?)', 
+        [role_id, manager_id],
+          function (err, result) {
+            if (err) throw err;
+            return result;
+          }
+        )
+  };
+};
 
 module.exports = new DB(connection);

@@ -69,6 +69,7 @@ function viewAllChoices() {
 
         case 'Update an employee role':
           //function
+          updateEmployee();
           break;
       }
     });
@@ -220,3 +221,56 @@ const addEmployee = () => {
 };
 
 
+const updateEmployee = () => {
+  db.getRolesOptions().then((roles) => {
+    const rolesArray = roles.map(role => role.title);
+    
+    let managersArray = [];
+
+    db.getEmployeeOptions().then((employees) => {
+      const employeeArray = employees.map(employee => `${employee.first_name} ${employee.last_name}`)
+    
+
+    db.getManagersOptions().then(managers => {
+
+      managersArray = (managers.map(manager => `${manager.first_name} ${manager.last_name}`))
+      managersArray.push('None of the above')
+
+      inquirer
+        .prompt([
+          {
+            type: 'list',
+            name: 'editEmployee',
+            message: 'Which employee would you like to edit?',
+            choices: employeeArray
+          },
+          {
+            type: 'list',
+            name: 'role_title',
+            message: 'What is the new role of this employee?',
+            choices: rolesArray
+          },
+          {
+            type: 'list',
+            name: 'manager_id',
+            message: 'If applicable, who is the new manager of this employee?',
+            choices: managersArray
+          }
+        ])
+        .then((res) => {
+          let manager_id = ''
+          if (managers[managersArray.indexOf((res.manager_id))] === undefined) {
+            manager_id = null;
+          } else {
+            manager_id = managers[managersArray.indexOf((res.manager_id))].id
+          }
+          db.updateTheEmployee(res.editEmployee, roles[rolesArray.indexOf(res.role_title)].id, manager_id).then(() => {
+            viewAllEmployees();
+            }
+          );
+        });
+    })
+  })
+  }
+  )
+}

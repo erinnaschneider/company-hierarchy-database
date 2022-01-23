@@ -223,13 +223,13 @@ const addEmployee = () => {
 
 const updateEmployee = () => {
   db.getRolesOptions().then((roles) => {
-    const rolesArray = roles.map(role => role.title);
-    
+    const rolesArray = roles.map((role, i) => `${role.title} id:${i+1}`);
+    // console.log(rolesArray);
     let managersArray = [];
 
     db.getEmployeeOptions().then((employees) => {
-      const employeeArray = employees.map(employee => `${employee.first_name} ${employee.last_name}`)
-    
+      const employeeArray = employees.map((employee, i) => `${employee.first_name} ${employee.last_name} id:${i+1}`)
+      //console.log(employeeArray);
 
     db.getManagersOptions().then(managers => {
 
@@ -258,13 +258,18 @@ const updateEmployee = () => {
           }
         ])
         .then((res) => {
+          // console.log(res);
           let manager_id = ''
           if (managers[managersArray.indexOf((res.manager_id))] === undefined) {
             manager_id = null;
           } else {
             manager_id = managers[managersArray.indexOf((res.manager_id))].id
           }
-          db.updateTheEmployee(res.editEmployee, roles[rolesArray.indexOf(res.role_title)].id, manager_id).then(() => {
+          const employeeId = res.editEmployee.split(":")[1];
+          const roleId = res.role_title.split(":")[1];
+          //console.log(employeeId)
+          db.updateTheEmployee(parseInt(roleId), manager_id, parseInt(employeeId)).then((res) => {
+            console.log(res);
             viewAllEmployees();
             }
           );

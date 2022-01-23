@@ -108,11 +108,13 @@ class DB {
         )
   }
 
-  updateTheEmployee(role_id, manager_id) {
+  updateTheEmployee(role, manager, employee_id) {
+    console.log(role, manager, employee_id);
+    console.log(typeof(employee_id));
     return this.connection
         .promise()
-        .query('INSERT INTO employee (role_id, manager_id) VALUES (?, ?)', 
-        [role_id, manager_id],
+        .query('UPDATE employee SET role_id = ?, manager_id = ? WHERE id = ?', 
+        [role, manager, employee_id],
           function (err, result) {
             if (err) throw err;
             return result;

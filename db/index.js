@@ -109,8 +109,8 @@ class DB {
   }
 
   updateTheEmployee(role, manager, employee_id) {
-    console.log(role, manager, employee_id);
-    console.log(typeof(employee_id));
+    //console.log(role, manager, employee_id);
+    //console.log(typeof(employee_id));
     return this.connection
         .promise()
         .query('UPDATE employee SET role_id = ?, manager_id = ? WHERE id = ?', 

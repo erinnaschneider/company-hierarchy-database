@@ -13,9 +13,11 @@
     * You can edit an existing employee.
 
 ## Screenshot
+![image](https://user-images.githubusercontent.com/90404513/150794773-8bb82b8d-3614-488c-91fb-079c2c3308bf.png)
 
 
 ## Video url
+https://watch.screencastify.com/v/OJ0iTH1FypcJJrtOyvrD
 
 ## Made by
 Erinn S. 💋

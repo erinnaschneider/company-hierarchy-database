@@ -269,7 +269,7 @@ const updateEmployee = () => {
           const roleId = res.role_title.split(":")[1];
           //console.log(employeeId)
           db.updateTheEmployee(parseInt(roleId), manager_id, parseInt(employeeId)).then((res) => {
-            console.log(res);
+           // console.log(res);
             viewAllEmployees();
             }
           );
